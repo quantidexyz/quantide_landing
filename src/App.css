@@ -980,7 +980,11 @@ textarea:focus-visible {
     display: none;
   }
 
-  .hero,
+  .hero {
+    padding: 80px 20px;
+    background: var(--off-white);
+  }
+
   .what-we-build,
   .projects,
   .podcast,
@@ -995,6 +999,11 @@ textarea:focus-visible {
 
   .studio-points {
     grid-template-columns: 1fr;
+  }
+
+  /* Reduce projects title background size to prevent overflow */
+  .projects-title-bg {
+    font-size: clamp(4rem, 15vw, 8rem);
   }
 
   .modal-content {
@@ -1079,5 +1088,16 @@ textarea:focus-visible {
   .podcast-cta .btn-primary {
     width: 100%;
     max-width: 280px;
+  }
+
+  /* Form inputs with better touch targets */
+  .form-input,
+  .form-textarea {
+    min-height: 48px;
+  }
+
+  /* Contact heading responsive sizing */
+  .contact h2 {
+    font-size: clamp(2.5rem, 12vw, 5rem);
   }
 }
