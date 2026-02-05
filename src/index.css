@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "liquidcn/styles.css";
+
+@source "../node_modules/liquidcn";
 
 @theme inline {
   --color-background: hsl(60 5% 96%);
