@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { cn } from 'liquidcn';
 import {
   Dialog,
@@ -105,11 +105,11 @@ const Hero = () => (
         smart contracts, and API integrations.
       </p>
       <div className="flex gap-6 items-center max-[768px]:flex-col max-[768px]:items-start max-[768px]:gap-4">
-        <a
+          <a
           href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0nzEnWRO2K7nWz1ZqegG84WxOSIVSzjpqfZ9aPsklpl4AXS79jBxHAEjk42nFsq-_q01Mf1tEw"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-8 py-4 bg-foreground text-background text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-foreground/90 max-[768px]:w-full max-[768px]:text-center min-h-12"
+          className="px-8 py-4 bg-foreground text-background text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-foreground/90 max-[768px]:w-full max-[768px]:text-center min-h-12 rounded-md"
         >
           BOOK A CALL
         </a>
@@ -194,7 +194,7 @@ const WhatWeBuild = () => (
 // Projects Section
 const Projects = ({ onOpenProject }) => (
   <section className="py-[120px] px-10 bg-muted relative overflow-hidden max-[1024px]:py-20 max-[1024px]:px-6 max-[768px]:px-5" id="work">
-    <h2 className="absolute top-10 left-10 text-[clamp(6rem,20vw,15rem)] font-bold text-background leading-[0.8] tracking-[-0.05em] pointer-events-none z-0 max-[768px]:text-[clamp(4rem,15vw,8rem)]">
+    <h2 className="absolute top-10 left-10 text-[clamp(6rem,20vw,15rem)] font-bold text-foreground leading-[0.8] tracking-[-0.05em] pointer-events-none z-0 max-[768px]:text-[clamp(4rem,15vw,8rem)]">
       PROJECTS
     </h2>
     <div className="relative z-[1] grid grid-cols-2 gap-10 mt-[120px] max-[1024px]:grid-cols-1 max-[1024px]:gap-8 max-[1024px]:mt-20">
@@ -227,8 +227,15 @@ const Projects = ({ onOpenProject }) => (
           tabIndex={0}
           onKeyDown={(e) => e.key === 'Enter' && onOpenProject(project)}
         >
-          <div className="aspect-[16/10] bg-muted flex items-center justify-center">
-            <img src={project.image} alt={`${project.name} screenshot`} className="w-full h-full object-cover" />
+          <div 
+            className="aspect-[16/10] bg-muted flex items-center justify-center p-4 rounded-t-2xl relative"
+            style={{
+              backgroundImage: `radial-gradient(circle, rgba(0, 0, 0, 0.18) 1px, transparent 1px)`,
+              backgroundSize: '20px 20px',
+              backgroundPosition: '0 0'
+            }}
+          >
+            <img src={project.image} alt={`${project.name} screenshot`} className="max-w-full max-h-full object-contain rounded-lg relative z-10" />
           </div>
           <div className="py-6 px-8 flex gap-3 text-xs text-foreground/50 flex-wrap max-[1024px]:py-5 max-[1024px]:px-6">
             <span>{project.type}</span>
@@ -239,7 +246,7 @@ const Projects = ({ onOpenProject }) => (
             <span>|</span>
             <span>{project.status}</span>
           </div>
-          <button className="w-full py-5 bg-foreground text-background text-sm tracking-[0.1em] font-semibold transition-colors duration-200 hover:bg-foreground/90 min-h-14">
+          <button className="w-full py-5 bg-foreground text-background text-sm tracking-[0.1em] font-semibold transition-colors duration-200 hover:bg-foreground/90 min-h-14 rounded-md">
             SEE PROJECT →
           </button>
         </div>
@@ -324,16 +331,26 @@ const ProjectModal = ({ project, open, onClose }) => {
 
 // Podcast Section
 const Podcast = () => (
-  <section className="py-[120px] px-10 bg-foreground text-background text-center max-[1024px]:py-20 max-[1024px]:px-6 max-[768px]:px-5" id="podcast">
-    <h2 className="text-[clamp(2rem,5vw,4rem)] leading-none mb-6">PODCAST — 0 TO SHIPPED</h2>
+  <section
+    className="py-[120px] px-10 bg-foreground text-background text-center max-[1024px]:py-20 max-[1024px]:px-6 max-[768px]:px-5 relative"
+    id="podcast"
+    style={{
+      backgroundImage: `
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
+      `,
+      backgroundSize: '32px 32px',
+    }}
+  >
+    <img src="/0-to-shipped-logo.png" alt="0 TO SHIPPED" className="mb-6 mx-auto" style={{ maxWidth: 'clamp(16rem, 40vw, 32rem)', height: 'auto' }} />
     <p className="text-xl text-background/50 max-w-[600px] mx-auto mb-10">
       A behind-the-scenes podcast about building, shipping, and scaling real products.
     </p>
     <div className="flex gap-6 justify-center mb-[60px] max-[1024px]:gap-4 max-[768px]:flex-col max-[768px]:gap-4">
-      <button className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mx-auto">
+      <button className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mx-auto rounded-md">
         LISTEN →
       </button>
-      <button className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mx-auto">
+      <button className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mx-auto rounded-md">
         WATCH →
       </button>
     </div>
@@ -374,8 +391,87 @@ const Studio = () => (
   </section>
 );
 
+// Party Mode Component - Raining Doges
+const PartyMode = ({ active }) => {
+  const [doges, setDoges] = useState([]);
+  const audioRef = useRef(null);
+  const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2'];
+
+  useEffect(() => {
+    if (!active) {
+      setDoges([]);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      return;
+    }
+    const t = setTimeout(() => {
+      audioRef.current?.play().catch(() => {});
+    }, 0);
+    return () => clearTimeout(t);
+  }, [active]);
+
+  useEffect(() => {
+    if (!active) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      const newDoge = {
+        id: Date.now() + Math.random(),
+        left: Math.random() * 100,
+        delay: Math.random() * 2,
+        duration: 3 + Math.random() * 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        size: 40 + Math.random() * 40,
+      };
+      setDoges((prev) => [...prev, newDoge]);
+    }, 200);
+
+    return () => clearInterval(interval);
+  }, [active]);
+
+  useEffect(() => {
+    if (!active) return;
+
+    const timeout = setTimeout(() => {
+      setDoges((prev) => prev.slice(1));
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [doges, active]);
+
+  if (!active) return null;
+
+  return (
+    <>
+      <audio ref={audioRef} src="/celebration.mp3" loop />
+      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+      {doges.map((doge) => (
+        <img
+          key={doge.id}
+          src="/dancing_doge.png"
+          alt="dancing doge"
+          className="absolute party-doge"
+          style={{
+            left: `${doge.left}%`,
+            width: `${doge.size}px`,
+            height: `${doge.size}px`,
+            animationDelay: `${doge.delay}s`,
+            animationDuration: `${doge.duration}s`,
+            filter: `hue-rotate(${Math.random() * 360}deg) saturate(1.5)`,
+            top: '-50px',
+          }}
+        />
+      ))}
+    </div>
+    </>
+  );
+};
+
 // Contact Section
-const Contact = () => (
+const Contact = ({ onPartyModeToggle }) => (
   <section className="py-[120px] px-10 bg-foreground text-background grid grid-cols-2 gap-20 max-[1024px]:py-20 max-[1024px]:px-6 max-[1024px]:gap-10 max-[900px]:grid-cols-1 max-[768px]:px-5" id="contact">
     <div>
       <h2 className="text-[clamp(3rem,10vw,8rem)] leading-[0.9] max-[900px]:text-[clamp(2.5rem,8vw,5rem)] max-[768px]:text-[clamp(2.5rem,12vw,5rem)]">
@@ -402,7 +498,7 @@ const Contact = () => (
           SEND →
         </button>
       </form>
-      <div className="flex items-center gap-6 mt-8">
+      <div className="flex items-center gap-6 mt-8 flex-wrap">
         <a
           href="mailto:hello@quantide.xyz"
           className="text-background/50 text-base hover:text-background transition-colors duration-200"
@@ -418,6 +514,12 @@ const Contact = () => (
         >
           <Github size={20} />
         </a>
+        <button
+          onClick={onPartyModeToggle}
+          className="text-background/50 text-base hover:text-background transition-colors duration-200 cursor-pointer"
+        >
+          party
+        </button>
       </div>
     </div>
   </section>
@@ -428,6 +530,7 @@ const Contact = () => (
 function App() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [partyMode, setPartyMode] = useState(false);
 
   const handleOpenProject = (project) => {
     setSelectedProject(project);
@@ -436,6 +539,10 @@ function App() {
 
   const handleCloseProject = () => {
     setShowModal(false);
+  };
+
+  const handlePartyModeToggle = () => {
+    setPartyMode(!partyMode);
   };
 
   return (
@@ -447,9 +554,10 @@ function App() {
         <Projects onOpenProject={handleOpenProject} />
         <Podcast />
         <Studio />
-        <Contact />
+        <Contact onPartyModeToggle={handlePartyModeToggle} />
       </main>
       <ProjectModal project={selectedProject} open={showModal} onClose={handleCloseProject} />
+      <PartyMode active={partyMode} />
     </div>
   );
 }
