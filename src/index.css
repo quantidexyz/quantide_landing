@@ -177,6 +177,17 @@
   }
 }
 
+@keyframes rain-doge {
+  0% {
+    transform: translateY(-50px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(calc(100vh + 50px)) rotate(360deg);
+    opacity: 0;
+  }
+}
+
 @layer utilities {
   .animate-pulse-node {
     animation: pulse-node 2s ease-in-out infinite;
@@ -188,6 +199,10 @@
 
   .animate-dash-slow {
     animation: dash-slow 3s linear infinite;
+  }
+
+  .party-doge {
+    animation: rain-doge linear forwards;
   }
 }
 
