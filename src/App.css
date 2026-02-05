@@ -131,6 +131,116 @@ button {
   letter-spacing: 0.05em;
 }
 
+/* Hamburger Menu Button */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 8px;
+  gap: 5px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.hamburger-line {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--black);
+  transition: var(--transition-fast);
+}
+
+.hamburger-line.open:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger-line.open:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-line.open:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--off-white);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition-medium);
+}
+
+.mobile-menu.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-content {
+  display: flex;
+  flex-direction: column;
+  padding: 40px 20px;
+  height: 100%;
+}
+
+.mobile-nav-link {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--gray-400);
+  padding: 20px 0;
+  text-align: left;
+  border: none;
+  background: transparent;
+  border-bottom: 1px solid var(--gray-200);
+  transition: var(--transition-fast);
+  min-height: 64px;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link.active {
+  color: var(--black);
+}
+
+.mobile-menu-footer {
+  margin-top: auto;
+  padding-top: 40px;
+}
+
+.mobile-cta {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.mobile-social-icons {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--gray-500);
+}
+
+.mobile-social-icons span {
+  padding: 12px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Hero Section */
 .hero {
   min-height: 100vh;
@@ -672,11 +782,27 @@ button {
   .navbar {
     padding: 0 20px;
   }
-  
+
   .nav-center {
     display: none;
   }
-  
+
+  .nav-right .btn-book-call {
+    display: none;
+  }
+
+  .nav-right .social-icons {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
+
   .hero,
   .what-we-build,
   .projects,
@@ -685,22 +811,101 @@ button {
   .contact {
     padding: 80px 20px;
   }
-  
+
   .build-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .studio-points {
     grid-template-columns: 1fr;
   }
-  
+
   .contact {
     grid-template-columns: 1fr;
     gap: 40px;
   }
-  
+
   .modal-content {
     max-height: 100vh;
     border-radius: 0;
+  }
+
+  /* Improve touch targets on mobile */
+  .btn-primary,
+  .btn-outlined,
+  .btn-text {
+    min-height: 48px;
+    padding: 16px 24px;
+  }
+
+  .nav-link {
+    min-height: 44px;
+    padding: 12px 8px;
+  }
+
+  .see-project-btn {
+    min-height: 56px;
+  }
+
+  /* Modal improvements for mobile */
+  .modal-overlay {
+    padding: 0;
+  }
+
+  .modal-header,
+  .modal-hero,
+  .modal-summary,
+  .modal-actions {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .modal-close {
+    top: 16px;
+    right: 16px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .what-we-did ul {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions .btn-secondary,
+  .modal-actions .btn-primary {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Hero CTA stacking on mobile */
+  .hero-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .hero-cta .btn-primary,
+  .hero-cta .btn-text {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Podcast CTA stacking */
+  .podcast-cta {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .podcast-cta .btn-primary {
+    width: 100%;
+    max-width: 280px;
   }
 }

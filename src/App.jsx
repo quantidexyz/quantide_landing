@@ -10,8 +10,18 @@ const Logo = () => (
 
 // Navigation Component
 const Navbar = ({ activeSection, setActiveSection }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const sections = ['studio', 'work', 'podcast', 'contact'];
-  
+
+  const handleNavClick = (section) => {
+    setActiveSection(section);
+    setMobileMenuOpen(false);
+  };
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
     <nav className="navbar">
       <div className="nav-left">
@@ -19,7 +29,7 @@ const Navbar = ({ activeSection, setActiveSection }) => {
       </div>
       <div className="nav-center">
         {sections.map(section => (
-          <button 
+          <button
             key={section}
             className={`nav-link ${activeSection === section ? 'active' : ''}`}
             onClick={() => setActiveSection(section)}
@@ -29,11 +39,44 @@ const Navbar = ({ activeSection, setActiveSection }) => {
         ))}
       </div>
       <div className="nav-right">
-        <button className="btn-outlined">BOOK A CALL</button>
+        <button className="btn-outlined btn-book-call">BOOK A CALL</button>
         <div className="social-icons">
           <span>X</span>
           <span>GH</span>
           <span>IN</span>
+        </div>
+        <button
+          className="hamburger-btn"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle menu"
+          aria-expanded={mobileMenuOpen}
+        >
+          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+        </button>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+        <div className="mobile-menu-content">
+          {sections.map(section => (
+            <button
+              key={section}
+              className={`mobile-nav-link ${activeSection === section ? 'active' : ''}`}
+              onClick={() => handleNavClick(section)}
+            >
+              {section.toUpperCase()}
+            </button>
+          ))}
+          <div className="mobile-menu-footer">
+            <button className="btn-primary mobile-cta">BOOK A CALL</button>
+            <div className="mobile-social-icons">
+              <span>X</span>
+              <span>GH</span>
+              <span>IN</span>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
