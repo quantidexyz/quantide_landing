@@ -31,3 +31,13 @@ Changes made:
 - Updated the CSS in `src/App.css` to properly style the logo image with flexbox alignment and a height of 36px
 - Build passes successfully
 
+[12:38:37 PM] Committed: chore(ralph): iteration 3 progress
+[12:38:39 PM] Iteration 4 starting
+[12:39:52 PM] I've completed the task of updating project cards and modal to use actual screenshot images instead of placeholders.
+
+**Summary of changes:**
+- Added `image` property to each project object (levr_screenshot.jpg and breadcrumb_screenshot.jpg)
+- Replaced placeholder divs with actual `<img>` elements in both project cards and modal
+- Updated CSS to style the images with `object-fit: cover` for proper display
+- Build passes successfully
+

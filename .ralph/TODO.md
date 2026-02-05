@@ -3,7 +3,7 @@
 - [x] Add Quantide logo image to the project and update branding throughout (company name "Quantide" in navbar, title, meta tags, email)
 - [x] Pull assets from gh-pages branch (project screenshots: levr_screenshot.jpg, breadcrumb_screenshot.jpg, quantide_logo.jpg) and place in appropriate locations
 - [x] Replace placeholder Logo component with actual Quantide logo image
-- [ ] Update project cards and modal to use actual screenshot images instead of placeholders
+- [x] Update project cards and modal to use actual screenshot images instead of placeholders
 - [ ] Fix mobile responsiveness: add hamburger menu for mobile nav, improve touch targets, fix hidden nav-center on mobile
 - [ ] Fix tablet/medium breakpoint responsiveness: review and adjust layouts for 768px-1024px range
 - [ ] Polish UI/UX: fix modal class vs className inconsistency (lines 181-183), improve social icons with proper icons, add focus states for accessibility
@@ -53,3 +53,16 @@ _Append progress and learnings here after each iteration_
   - The logo image (320x113px) has an aspect ratio of ~2.83:1
   - Using height: 36px gives a logo width of ~102px which fits well in the navbar
   - Vite serves files from public/ folder at the root path (e.g., `/quantide_logo.jpg`)
+
+## Update Project Cards and Modal with Screenshots - Done
+- Added `image` property to each project object with corresponding screenshot path
+- Replaced placeholder `<div>` in project cards with `<img>` using project.image
+- Replaced placeholder `<div>` in modal with `<img>` using project.image
+- Updated CSS: replaced `.project-placeholder` with `.project-image` class (object-fit: cover)
+- Updated CSS: replaced `.screenshot-placeholder` with `.modal-image` class (object-fit: cover, border-radius)
+- Files changed: src/App.jsx (lines 116-140, 169-172), src/App.css (lines 345-349, 448-452)
+- Build passes successfully
+- **Learnings:**
+  - Project data is inline in the component - images need to be added to each project object
+  - Using `object-fit: cover` ensures images fill the container while maintaining aspect ratio
+  - Modal images need border-radius to match the container styling

@@ -114,29 +114,29 @@ const Projects = ({ onOpenProject }) => (
     <h2 className="projects-title-bg">PROJECTS</h2>
     <div className="project-cards">
       {[
-        { 
+        {
           id: 'levr',
-          name: 'Levr', 
+          name: 'Levr',
           type: 'Token Launchpad',
           role: 'Product, Design, Engineering',
           stack: 'Solidity, React, APIs',
           status: 'Live',
-          url: 'https://levr.world'
+          url: 'https://levr.world',
+          image: '/levr_screenshot.jpg'
         },
-        { 
-          id: 'breadcrumb', 
-          name: 'Breadcrumb', 
+        {
+          id: 'breadcrumb',
+          name: 'Breadcrumb',
           type: 'AI Marketing',
           role: 'Product, Design, Engineering',
           stack: 'AI, Twitter/X APIs',
-          status: 'Live'
+          status: 'Live',
+          image: '/breadcrumb_screenshot.jpg'
         }
       ].map((project, i) => (
         <div key={project.id} className="project-card" onClick={() => onOpenProject(project)}>
           <div className="project-preview">
-            <div className="project-placeholder">
-              <span>{project.name}</span>
-            </div>
+            <img src={project.image} alt={`${project.name} screenshot`} className="project-image" />
           </div>
           <div className="project-meta">
             <span>{project.type}</span>
@@ -168,9 +168,7 @@ const ProjectModal = ({ project, onClose }) => {
         </div>
         <div className="modal-hero">
           <div className="modal-screenshot">
-            <div className="screenshot-placeholder">
-              <span>{project.name} Interface</span>
-            </div>
+            <img src={project.image} alt={`${project.name} interface`} className="modal-image" />
           </div>
         </div>
         <div className="modal-summary">
