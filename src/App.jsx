@@ -4,8 +4,8 @@ import './App.css';
 // Logo component (placeholder - replace with actual logo)
 const Logo = () => (
   <div className="logo">
-    <svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="0" y="30" fontFamily="system-ui, sans-serif" fontSize="24" fontWeight="700" fill="currentColor">QUANTI</text>
+    <svg width="140" height="40" viewBox="0 0 140 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="30" fontFamily="system-ui, sans-serif" fontSize="24" fontWeight="700" fill="currentColor">QUANTIDE</text>
     </svg>
   </div>
 );
