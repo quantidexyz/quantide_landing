@@ -5,7 +5,7 @@
 - [x] Replace placeholder Logo component with actual Quantide logo image
 - [x] Update project cards and modal to use actual screenshot images instead of placeholders
 - [x] Fix mobile responsiveness: add hamburger menu for mobile nav, improve touch targets, fix hidden nav-center on mobile
-- [ ] Fix tablet/medium breakpoint responsiveness: review and adjust layouts for 768px-1024px range
+- [x] Fix tablet/medium breakpoint responsiveness: review and adjust layouts for 768px-1024px range
 - [ ] Polish UI/UX: fix modal class vs className inconsistency (lines 181-183), improve social icons with proper icons, add focus states for accessibility
 - [ ] Test responsive design across all breakpoints and verify all sections display correctly
 
@@ -88,3 +88,24 @@ _Append progress and learnings here after each iteration_
   - Hamburger animation uses translateY + rotate transforms on the lines
   - Touch target minimum of 44px recommended by WCAG for accessibility
   - Mobile menu uses `visibility` + `opacity` for smooth CSS transitions
+
+## Fix Tablet/Medium Breakpoint Responsiveness - Done
+- Improved `@media (max-width: 1024px)` breakpoint with comprehensive tablet adjustments:
+  - Navbar: reduced padding (24px), smaller gaps (24px), smaller font sizes (0.7rem)
+  - Hero: reduced padding, smaller max-width (600px), smaller subtitle font
+  - Build grid: smaller card padding (32px 24px), smaller h3 font size
+  - Project cards: reduced gap (32px), reduced margin-top (80px)
+  - Modal: reduced max-width (700px), adjusted padding (32px)
+  - Studio/Contact: reduced spacing and gaps
+- Added new `@media (max-width: 900px)` breakpoint for small tablets:
+  - Hides desktop nav-center (shows hamburger menu at 900px instead of 768px)
+  - Hides social icons
+  - Contact section switches to single column
+  - Contact h2 uses smaller clamp values
+- Files changed: src/App.css (lines 758-854 restructured)
+- Build passes successfully
+- **Learnings:**
+  - Adding intermediate breakpoints (900px) bridges the gap between desktop and mobile
+  - Hamburger menu can appear earlier (900px) to prevent cramped navbar on narrow tablets
+  - Progressive reduction of padding/gaps creates smooth visual transition across breakpoints
+  - Contact section (2-column grid) needs to collapse earlier than other sections due to text size

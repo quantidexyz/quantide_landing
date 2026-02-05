@@ -754,40 +754,123 @@ button {
   color: var(--off-white);
 }
 
-/* Responsive */
+/* Responsive - Tablet (768px - 1024px) */
 @media (max-width: 1024px) {
-  .hero {
-    grid-template-columns: 1fr;
-    background: var(--off-white);
-  }
-  
-  .hero-visual {
-    display: none;
-  }
-  
-  .build-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .project-cards {
-    grid-template-columns: 1fr;
-  }
-  
-  .summary-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
   .navbar {
-    padding: 0 20px;
+    padding: 0 24px;
   }
 
   .nav-center {
+    gap: 24px;
+  }
+
+  .nav-link {
+    font-size: 0.7rem;
+    padding: 8px 4px;
+  }
+
+  .nav-right {
+    gap: 16px;
+  }
+
+  .btn-outlined {
+    padding: 10px 16px;
+    font-size: 0.7rem;
+  }
+
+  .social-icons {
+    gap: 12px;
+    font-size: 0.7rem;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    background: var(--off-white);
+    padding: 100px 24px 60px;
+  }
+
+  .hero-visual {
     display: none;
   }
 
-  .nav-right .btn-book-call {
+  .hero-content {
+    max-width: 600px;
+  }
+
+  .hero-subtitle {
+    font-size: 1.125rem;
+  }
+
+  .what-we-build,
+  .projects,
+  .podcast,
+  .studio,
+  .contact {
+    padding: 80px 24px;
+  }
+
+  .build-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .build-card {
+    padding: 32px 24px;
+  }
+
+  .build-card h3 {
+    font-size: 1.25rem;
+  }
+
+  .project-cards {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-top: 80px;
+  }
+
+  .project-meta {
+    padding: 20px 24px;
+  }
+
+  .modal-content {
+    max-width: 700px;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .modal-header,
+  .modal-hero,
+  .modal-summary,
+  .modal-actions {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .studio-title {
+    margin-bottom: 60px;
+  }
+
+  .studio-points {
+    gap: 24px;
+  }
+
+  .studio-point {
+    padding: 24px;
+  }
+
+  .contact {
+    gap: 40px;
+  }
+
+  .podcast-cta {
+    gap: 16px;
+  }
+}
+
+/* Responsive - Small Tablet (850px - 768px) - Hide desktop nav, show hamburger */
+@media (max-width: 900px) {
+  .nav-center {
     display: none;
   }
 
@@ -801,6 +884,26 @@ button {
 
   .mobile-menu {
     display: block;
+  }
+
+  .contact {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .contact h2 {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+  }
+}
+
+/* Responsive - Mobile (<768px) */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .nav-right .btn-book-call {
+    display: none;
   }
 
   .hero,
@@ -818,11 +921,6 @@ button {
 
   .studio-points {
     grid-template-columns: 1fr;
-  }
-
-  .contact {
-    grid-template-columns: 1fr;
-    gap: 40px;
   }
 
   .modal-content {
