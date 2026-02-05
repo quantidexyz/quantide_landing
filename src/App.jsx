@@ -1,153 +1,169 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React, { useState } from 'react';
+import { cn } from 'liquidcn';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  Navbar as ResizableNavbar,
+  NavBody,
+  NavItems,
+  MobileNav,
+  NavbarLogo,
+  NavbarButton,
+  MobileNavHeader,
+  MobileNavToggle,
+  MobileNavMenu,
+} from 'liquidcn/client';
+import { Github } from 'lucide-react';
 
-// Logo component
-const Logo = () => (
-  <div className="logo">
-    <img src="/quantide_logo.jpg" alt="Quantide" className="logo-img" />
-  </div>
-);
+const navItems = [
+  { name: 'Studio', link: '#studio' },
+  { name: 'Work', link: '#work' },
+  { name: 'Podcast', link: '#podcast' },
+  { name: 'Contact', link: '#contact' },
+];
 
-// Navigation Component
-const Navbar = ({ activeSection, setActiveSection }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const sections = ['studio', 'work', 'podcast', 'contact'];
-
-  const handleNavClick = (section) => {
-    setActiveSection(section);
-    setMobileMenuOpen(false);
-  };
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
+// Navigation Component using liquidcn ResizableNavbar
+const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <nav className="navbar">
-      <div className="nav-left">
-        <Logo />
-      </div>
-      <div className="nav-center">
-        {sections.map(section => (
-          <button
-            key={section}
-            className={`nav-link ${activeSection === section ? 'active' : ''}`}
-            onClick={() => setActiveSection(section)}
-          >
-            {section.toUpperCase()}
-          </button>
-        ))}
-      </div>
-      <div className="nav-right">
-        <button className="btn-outlined btn-book-call">BOOK A CALL</button>
-        <div className="social-icons">
-          <a href="https://x.com/quantide" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </a>
-          <a href="https://github.com/quantide" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-              <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
-            </svg>
-          </a>
-          <a href="https://linkedin.com/company/quantide" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-            </svg>
-          </a>
+    <ResizableNavbar menuOpen={isMobileMenuOpen}>
+      {/* Desktop Navigation */}
+      <NavBody>
+        <div className="flex items-center gap-3">
+          <NavbarLogo imageSrc="/quantide_logo.png" label="" imageWidth={140} imageHeight={40} imageClassName="h-10 w-auto" />
         </div>
-        <button
-          className="hamburger-btn"
-          onClick={toggleMobileMenu}
-          aria-label="Toggle menu"
-          aria-expanded={mobileMenuOpen}
-        >
-          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
-          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
-          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
-        </button>
-      </div>
-
-      {/* Mobile Menu Overlay */}
-      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
-        <div className="mobile-menu-content">
-          {sections.map(section => (
-            <button
-              key={section}
-              className={`mobile-nav-link ${activeSection === section ? 'active' : ''}`}
-              onClick={() => handleNavClick(section)}
+        <NavItems items={navItems} currentPath="#studio" />
+        <div className="flex items-center gap-4">
+          <NavbarButton asChild>
+            <a
+              href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0nzEnWRO2K7nWz1ZqegG84WxOSIVSzjpqfZ9aPsklpl4AXS79jBxHAEjk42nFsq-_q01Mf1tEw"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 border border-foreground bg-transparent text-foreground text-xs tracking-wide font-semibold hover:bg-foreground hover:text-background transition-colors rounded-md"
             >
-              {section.toUpperCase()}
-            </button>
-          ))}
-          <div className="mobile-menu-footer">
-            <button className="btn-primary mobile-cta">BOOK A CALL</button>
-            <div className="mobile-social-icons">
-              <a href="https://x.com/quantide" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </a>
-              <a href="https://github.com/quantide" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                  <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
-                </svg>
-              </a>
-              <a href="https://linkedin.com/company/quantide" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
+              BOOK A CALL
+            </a>
+          </NavbarButton>
         </div>
-      </div>
-    </nav>
+      </NavBody>
+
+      {/* Mobile Navigation */}
+      <MobileNav>
+        <MobileNavHeader>
+          <NavbarLogo imageSrc="/quantide_logo.png" label="" imageWidth={120} imageHeight={35} imageClassName="h-9 w-auto" />
+          <MobileNavToggle
+            isOpen={isMobileMenuOpen}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          />
+        </MobileNavHeader>
+
+        <MobileNavMenu isOpen={isMobileMenuOpen}>
+          {navItems.map((item, idx) => (
+            <a
+              key={`mobile-link-${idx}`}
+              href={item.link}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="relative text-base font-medium transition text-foreground/60 hover:text-foreground"
+            >
+              <span className="block">{item.name}</span>
+            </a>
+          ))}
+          <div className="flex w-full flex-col gap-4">
+            <NavbarButton onClick={() => setIsMobileMenuOpen(false)} asChild>
+              <a
+                href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0nzEnWRO2K7nWz1ZqegG84WxOSIVSzjpqfZ9aPsklpl4AXS79jBxHAEjk42nFsq-_q01Mf1tEw"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full px-6 py-3 bg-foreground text-background text-sm tracking-wide font-semibold rounded-md text-center"
+              >
+                BOOK A CALL
+              </a>
+            </NavbarButton>
+          </div>
+        </MobileNavMenu>
+      </MobileNav>
+    </ResizableNavbar>
   );
 };
 
 // Hero Section
-const Hero = ({ setActiveSection }) => (
-  <section className="hero" id="studio">
-    <div className="hero-content">
-      <h1 className="hero-title">
+const Hero = () => (
+  <section className="min-h-screen pt-[120px] pb-20 px-10 grid grid-cols-[1.2fr_0.8fr] gap-[60px] items-center bg-[linear-gradient(to_right,var(--color-background)_60%,transparent_60%),repeating-linear-gradient(90deg,transparent,transparent_40px,rgba(0,0,0,0.03)_40px,rgba(0,0,0,0.03)_41px)] max-[1024px]:grid-cols-1 max-[1024px]:bg-background max-[1024px]:pt-[100px] max-[1024px]:pb-[60px] max-[1024px]:px-6 max-[768px]:pt-20 max-[768px]:px-5" id="studio">
+    <div className="max-w-[700px] max-[1024px]:max-w-[600px]">
+      <h1 className="text-[clamp(3rem,8vw,7rem)] leading-[0.9] mb-10">
         APPS<br />
         THAT<br />
         WORK
       </h1>
-      <p className="hero-subtitle">
-        A product-focused development studio for web apps, 
+      <p className="text-xl text-foreground/60 mb-10 max-w-[480px] max-[1024px]:text-lg">
+        A product-focused development studio for web apps,
         smart contracts, and API integrations.
       </p>
-      <div className="hero-cta">
-        <button className="btn-primary" onClick={() => setActiveSection('contact')}>BOOK A CALL</button>
-        <button className="btn-text" onClick={() => setActiveSection('work')}>VIEW WORK →</button>
+      <div className="flex gap-6 items-center max-[768px]:flex-col max-[768px]:items-start max-[768px]:gap-4">
+        <a
+          href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0nzEnWRO2K7nWz1ZqegG84WxOSIVSzjpqfZ9aPsklpl4AXS79jBxHAEjk42nFsq-_q01Mf1tEw"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-8 py-4 bg-foreground text-background text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-foreground/90 max-[768px]:w-full max-[768px]:text-center min-h-12"
+        >
+          BOOK A CALL
+        </a>
+        <a
+          href="#work"
+          className="flex items-center text-sm tracking-[0.05em] font-semibold text-foreground hover:text-foreground/70 transition-colors duration-200 bg-transparent border-none cursor-pointer max-[768px]:w-full max-[768px]:justify-center min-h-12"
+        >
+          VIEW WORK →
+        </a>
       </div>
     </div>
-    <div className="hero-visual">
-      <div className="system-illustration">
-        <svg viewBox="0 0 400 300" className="illustration-svg">
-          {/* Abstract system/pipeline illustration */}
+    <div className="flex items-center justify-center max-[1024px]:mt-10 max-[768px]:mt-8">
+      <div className="w-full max-w-[500px] aspect-[4/3] text-foreground/30 max-[768px]:max-w-[300px]">
+        <svg viewBox="0 0 400 300" className="w-full h-full">
           <defs>
             <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
               <circle cx="1" cy="1" r="1" fill="currentColor" opacity="0.2"/>
             </pattern>
           </defs>
           <rect width="400" height="300" fill="url(#grid)"/>
-          {/* Pipeline lines */}
-          <path d="M50 150 Q100 100 150 150 T250 150 T350 100" stroke="currentColor" strokeWidth="2" fill="none" className="pipeline"/>
-          <path d="M50 180 Q100 230 150 180 T250 180 T350 220" stroke="currentColor" strokeWidth="1.5" fill="none" className="pipeline-secondary"/>
-          {/* Nodes */}
-          <circle cx="50" cy="150" r="8" className="node"/>
-          <circle cx="150" cy="150" r="6" className="node"/>
-          <circle cx="250" cy="150" r="8" className="node"/>
-          <circle cx="350" cy="100" r="10" className="node-main"/>
-          {/* Connection dots */}
-          <circle cx="50" cy="180" r="5" className="node-secondary"/>
-          <circle cx="150" cy="180" r="4" className="node-secondary"/>
-          <circle cx="250" cy="180" r="5" className="node-secondary"/>
-          <circle cx="350" cy="220" r="8" className="node-main"/>
+          {/* Pipeline lines with animation */}
+          <path
+            d="M50 150 Q100 100 150 150 T250 150 T350 100"
+            stroke="currentColor"
+            strokeWidth="2"
+            fill="none"
+            className="opacity-40 animate-dash"
+            strokeDasharray="10 5"
+          />
+          <path
+            d="M50 180 Q100 230 150 180 T250 180 T350 220"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
+            className="opacity-20 animate-dash-slow"
+            strokeDasharray="8 4"
+          />
+          {/* Animated nodes */}
+          <circle cx="50" cy="150" r="8" className="fill-foreground animate-pulse-node" style={{ animationDelay: '0s' }}/>
+          <circle cx="150" cy="150" r="6" className="fill-foreground animate-pulse-node" style={{ animationDelay: '0.3s' }}/>
+          <circle cx="250" cy="150" r="8" className="fill-foreground animate-pulse-node" style={{ animationDelay: '0.6s' }}/>
+          <circle cx="350" cy="100" r="10" className="fill-foreground/80 animate-pulse-node" style={{ animationDelay: '0.9s' }}/>
+          {/* Secondary nodes */}
+          <circle cx="50" cy="180" r="5" className="fill-foreground/50 animate-pulse-node" style={{ animationDelay: '0.15s' }}/>
+          <circle cx="150" cy="180" r="4" className="fill-foreground/50 animate-pulse-node" style={{ animationDelay: '0.45s' }}/>
+          <circle cx="250" cy="180" r="5" className="fill-foreground/50 animate-pulse-node" style={{ animationDelay: '0.75s' }}/>
+          <circle cx="350" cy="220" r="8" className="fill-foreground/80 animate-pulse-node" style={{ animationDelay: '1.05s' }}/>
+          {/* Data particles flowing along paths */}
+          <circle r="3" className="fill-foreground">
+            <animateMotion dur="3s" repeatCount="indefinite" path="M50 150 Q100 100 150 150 T250 150 T350 100" />
+          </circle>
+          <circle r="2" className="fill-foreground/60">
+            <animateMotion dur="4s" repeatCount="indefinite" path="M50 180 Q100 230 150 180 T250 180 T350 220" />
+          </circle>
         </svg>
       </div>
     </div>
@@ -156,19 +172,19 @@ const Hero = ({ setActiveSection }) => (
 
 // What We Build Section
 const WhatWeBuild = () => (
-  <section className="what-we-build" id="what-we-build">
-    <h2 className="section-title">WHAT WE BUILD</h2>
-    <div className="build-grid">
+  <section className="py-[120px] px-10 bg-foreground text-background max-[1024px]:py-20 max-[1024px]:px-6 max-[768px]:px-5" id="what-we-build">
+    <h2 className="text-sm tracking-[0.15em] text-background/50 mb-[60px]">WHAT WE BUILD</h2>
+    <div className="grid grid-cols-4 gap-px bg-background/20 border border-background/20 max-[1024px]:grid-cols-2 max-[768px]:grid-cols-1">
       {[
         { title: 'Web Apps', desc: 'Full-stack applications with modern frameworks' },
         { title: 'Smart Contracts', desc: 'Secure, audited DeFi and token contracts' },
         { title: 'API & Platform Integrations', desc: 'Connect your systems seamlessly' },
         { title: 'MVP → Launch', desc: 'From concept to production in weeks' }
       ].map((item, i) => (
-        <div key={i} className="build-card">
-          <span className="card-index">[0{i + 1}]</span>
-          <h3>{item.title}</h3>
-          <p>{item.desc}</p>
+        <div key={i} className="p-12 bg-foreground border border-background/20 transition-colors duration-300 cursor-pointer hover:bg-foreground/90 group max-[1024px]:p-8">
+          <span className="block text-xs text-background/40 mb-6 font-mono group-hover:text-background/60">[0{i + 1}]</span>
+          <h3 className="text-2xl font-bold mb-4 max-[1024px]:text-xl">{item.title}</h3>
+          <p className="text-sm text-background/50 leading-relaxed">{item.desc}</p>
         </div>
       ))}
     </div>
@@ -177,9 +193,11 @@ const WhatWeBuild = () => (
 
 // Projects Section
 const Projects = ({ onOpenProject }) => (
-  <section className="projects" id="work">
-    <h2 className="projects-title-bg">PROJECTS</h2>
-    <div className="project-cards">
+  <section className="py-[120px] px-10 bg-muted relative overflow-hidden max-[1024px]:py-20 max-[1024px]:px-6 max-[768px]:px-5" id="work">
+    <h2 className="absolute top-10 left-10 text-[clamp(6rem,20vw,15rem)] font-bold text-background leading-[0.8] tracking-[-0.05em] pointer-events-none z-0 max-[768px]:text-[clamp(4rem,15vw,8rem)]">
+      PROJECTS
+    </h2>
+    <div className="relative z-[1] grid grid-cols-2 gap-10 mt-[120px] max-[1024px]:grid-cols-1 max-[1024px]:gap-8 max-[1024px]:mt-20">
       {[
         {
           id: 'levr',
@@ -198,14 +216,21 @@ const Projects = ({ onOpenProject }) => (
           role: 'Product, Design, Engineering',
           stack: 'AI, Twitter/X APIs',
           status: 'Live',
+          url: 'https://breadcrumb.cash',
           image: '/breadcrumb_screenshot.jpg'
         }
-      ].map((project, i) => (
-        <div key={project.id} className="project-card" onClick={() => onOpenProject(project)}>
-          <div className="project-preview">
-            <img src={project.image} alt={`${project.name} screenshot`} className="project-image" />
+      ].map((project) => (
+        <div
+          key={project.id}
+          className="bg-background rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 border border-foreground/10 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2"
+          onClick={() => onOpenProject(project)}
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && onOpenProject(project)}
+        >
+          <div className="aspect-[16/10] bg-muted flex items-center justify-center">
+            <img src={project.image} alt={`${project.name} screenshot`} className="w-full h-full object-cover" />
           </div>
-          <div className="project-meta">
+          <div className="py-6 px-8 flex gap-3 text-xs text-foreground/50 flex-wrap max-[1024px]:py-5 max-[1024px]:px-6">
             <span>{project.type}</span>
             <span>|</span>
             <span>{project.role}</span>
@@ -214,75 +239,112 @@ const Projects = ({ onOpenProject }) => (
             <span>|</span>
             <span>{project.status}</span>
           </div>
-          <button className="see-project-btn">SEE PROJECT →</button>
+          <button className="w-full py-5 bg-foreground text-background text-sm tracking-[0.1em] font-semibold transition-colors duration-200 hover:bg-foreground/90 min-h-14">
+            SEE PROJECT →
+          </button>
         </div>
       ))}
     </div>
   </section>
 );
 
-// Project Modal
-const ProjectModal = ({ project, onClose }) => {
+// Project Modal using liquidcn Dialog
+const ProjectModal = ({ project, open, onClose }) => {
   if (!project) return null;
-  
+
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>✕</button>
-        <div className="modal-header">
-          <h2>{project.name}</h2>
-          <span className="modal-index">[01]</span>
-        </div>
-        <div className="modal-hero">
-          <div className="modal-screenshot">
-            <img src={project.image} alt={`${project.name} interface`} className="modal-image" />
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent className="sm:max-w-[800px]" showCloseButton>
+        <DialogHeader>
+          <DialogTitle className="text-2xl">{project.name}</DialogTitle>
+          <DialogDescription>
+            {project.type} • {project.status}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+            <img src={project.image} alt={`${project.name} interface`} className="w-full h-full object-cover" />
           </div>
-        </div>
-        <div className="modal-summary">
-          <div className="summary-grid">
-            <div><span className="label">TYPE</span><span>{project.type}</span></div>
-            <div><span className="label">ROLE</span><span>{project.role}</span></div>
-            <div><span className="label">STACK</span><span>{project.stack}</span></div>
-            <div><span className="label">STATUS</span><span>{project.status}</span></div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-foreground/5 rounded-lg">
+            <div>
+              <span className="block text-[10px] tracking-wide text-foreground/50 mb-1">TYPE</span>
+              <span className="text-sm font-medium">{project.type}</span>
+            </div>
+            <div>
+              <span className="block text-[10px] tracking-wide text-foreground/50 mb-1">ROLE</span>
+              <span className="text-sm font-medium">{project.role}</span>
+            </div>
+            <div>
+              <span className="block text-[10px] tracking-wide text-foreground/50 mb-1">STACK</span>
+              <span className="text-sm font-medium">{project.stack}</span>
+            </div>
+            <div>
+              <span className="block text-[10px] tracking-wide text-foreground/50 mb-1">STATUS</span>
+              <span className="text-sm font-medium">{project.status}</span>
+            </div>
           </div>
-          <div className="what-we-did">
-            <h4>WHAT WE DID</h4>
-            <ul>
-              <li>Product definition</li>
-              <li>Smart contract architecture</li>
-              <li>Frontend & UX</li>
-              <li>API integrations</li>
+
+          <div>
+            <h4 className="text-xs tracking-wide text-foreground/50 mb-3">WHAT WE DID</h4>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {['Product definition', 'Smart contract architecture', 'Frontend & UX', 'API integrations'].map((item, i) => (
+                <li key={i} className="flex items-center gap-2 text-sm text-foreground/80">
+                  <span className="text-foreground/40">→</span>
+                  {item}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
-        <div className="modal-actions">
+
+        <DialogFooter className="mt-6">
           {project.url && (
-            <a href={project.url} target="_blank" rel="noopener noreferrer" className="btn-secondary">
-              VISIT LIVE ↑
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-2.5 border border-foreground/20 text-sm font-medium rounded-md transition-colors duration-200 hover:bg-foreground/5 text-center"
+            >
+              Visit Live ↗
             </a>
           )}
-          <button className="btn-primary" onClick={onClose}>CLOSE PROJECT</button>
-        </div>
-      </div>
-    </div>
+          <button
+            className="px-6 py-2.5 bg-foreground text-background text-sm font-medium rounded-md transition-colors duration-200 hover:bg-foreground/90"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
 // Podcast Section
 const Podcast = () => (
-  <section className="podcast" id="podcast">
-    <h2 className="section-title">PODCAST — 0 TO SHIPPED</h2>
-    <p className="podcast-desc">
+  <section className="py-[120px] px-10 bg-foreground text-background text-center max-[1024px]:py-20 max-[1024px]:px-6 max-[768px]:px-5" id="podcast">
+    <h2 className="text-[clamp(2rem,5vw,4rem)] leading-none mb-6">PODCAST — 0 TO SHIPPED</h2>
+    <p className="text-xl text-background/50 max-w-[600px] mx-auto mb-10">
       A behind-the-scenes podcast about building, shipping, and scaling real products.
     </p>
-    <div className="podcast-cta">
-      <button className="btn-primary">LISTEN →</button>
-      <button className="btn-primary">WATCH →</button>
+    <div className="flex gap-6 justify-center mb-[60px] max-[1024px]:gap-4 max-[768px]:flex-col max-[768px]:gap-4">
+      <button className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mx-auto">
+        LISTEN →
+      </button>
+      <button className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mx-auto">
+        WATCH →
+      </button>
     </div>
-    <div className="waveform">
-      <svg viewBox="0 0 200 40" className="waveform-svg">
-        <path d="M0 20 Q10 5 20 20 T40 20 T60 20 T80 20 T100 20 T120 20 T140 20 T160 20 T180 20 T200 20" 
-              stroke="currentColor" fill="none" strokeWidth="2"/>
+    <div className="max-w-[200px] mx-auto text-background/40">
+      <svg viewBox="0 0 200 40" className="w-full">
+        <path
+          d="M0 20 Q10 5 20 20 T40 20 T60 20 T80 20 T100 20 T120 20 T140 20 T160 20 T180 20 T200 20"
+          stroke="currentColor"
+          fill="none"
+          strokeWidth="2"
+        />
       </svg>
     </div>
   </section>
@@ -290,91 +352,104 @@ const Podcast = () => (
 
 // Studio/Philosophy Section
 const Studio = () => (
-  <section className="studio" id="studio-section">
-    <h2 className="studio-title">
+  <section className="py-[120px] px-10 bg-background max-[1024px]:py-20 max-[1024px]:px-6 max-[768px]:px-5" id="studio-section">
+    <h2 className="text-[clamp(2.5rem,6vw,5rem)] leading-none mb-20 max-[1024px]:mb-[60px]">
       WE DON'T JUST<br />
       DESIGN OR CODE.<br />
       WE SHIP.
     </h2>
-    <div className="studio-points">
-      <div className="studio-point">
-        <span className="point-number">[01]</span>
-        <p>Built by founders who understand product</p>
-      </div>
-      <div className="studio-point">
-        <span className="point-number">[02]</span>
-        <p>Product-first mindset, engineering excellence</p>
-      </div>
-      <div className="studio-point">
-        <span className="point-number">[03]</span>
-        <p>Fast execution, reliable delivery</p>
-      </div>
-      <div className="studio-point">
-        <span className="point-number">[04]</span>
-        <p>Real-world systems, not theory</p>
-      </div>
+    <div className="grid grid-cols-2 gap-10 max-[1024px]:gap-6 max-[768px]:grid-cols-1">
+      {[
+        'Built by founders who understand product',
+        'Product-first mindset, engineering excellence',
+        'Fast execution, reliable delivery',
+        'Real-world systems, not theory'
+      ].map((point, i) => (
+        <div key={i} className="p-8 bg-muted border border-foreground/10 max-[1024px]:p-6">
+          <span className="block text-xs text-foreground/40 mb-4 font-mono">[0{i + 1}]</span>
+          <p className="text-lg text-foreground/80">{point}</p>
+        </div>
+      ))}
     </div>
   </section>
 );
 
 // Contact Section
 const Contact = () => (
-  <section className="contact" id="contact">
-    <div className="contact-left">
-      <h2>
+  <section className="py-[120px] px-10 bg-foreground text-background grid grid-cols-2 gap-20 max-[1024px]:py-20 max-[1024px]:px-6 max-[1024px]:gap-10 max-[900px]:grid-cols-1 max-[768px]:px-5" id="contact">
+    <div>
+      <h2 className="text-[clamp(3rem,10vw,8rem)] leading-[0.9] max-[900px]:text-[clamp(2.5rem,8vw,5rem)] max-[768px]:text-[clamp(2.5rem,12vw,5rem)]">
         LET'S<br />
         BUILD
       </h2>
     </div>
-    <div className="contact-right">
-      <form className="contact-form" onSubmit={e => e.preventDefault()}>
-        <input type="email" placeholder="EMAIL" className="form-input" />
-        <textarea placeholder="WHAT DO YOU WANT TO BUILD?" className="form-textarea" rows={3}></textarea>
-        <button type="submit" className="btn-primary">SEND →</button>
+    <div>
+      <form className="flex flex-col gap-6" onSubmit={e => e.preventDefault()}>
+        <input
+          type="email"
+          placeholder="EMAIL"
+          className="w-full p-5 bg-transparent border border-background/30 text-background font-sans text-sm tracking-[0.05em] transition-colors duration-200 placeholder:text-background/40 focus:outline-none focus:border-background min-h-12 rounded-md"
+        />
+        <textarea
+          placeholder="WHAT DO YOU WANT TO BUILD?"
+          className="w-full p-5 bg-transparent border border-background/30 text-background font-sans text-sm tracking-[0.05em] transition-colors duration-200 placeholder:text-background/40 focus:outline-none focus:border-background resize-y min-h-[120px] rounded-md"
+          rows={3}
+        />
+        <button
+          type="submit"
+          className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 min-h-12 rounded-md"
+        >
+          SEND →
+        </button>
       </form>
-      <a href="mailto:hello@quantide.xyz" className="email-link">hello@quantide.xyz</a>
+      <div className="flex items-center gap-6 mt-8">
+        <a
+          href="mailto:hello@quantide.xyz"
+          className="text-background/50 text-base hover:text-background transition-colors duration-200"
+        >
+          hello@quantide.xyz
+        </a>
+        <a
+          href="https://github.com/quantidexyz"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-background/50 hover:text-background transition-colors duration-200"
+          aria-label="GitHub"
+        >
+          <Github size={20} />
+        </a>
+      </div>
     </div>
   </section>
 );
 
+
 // Main App Component
 function App() {
-  const [activeSection, setActiveSection] = useState('studio');
   const [selectedProject, setSelectedProject] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenProject = (project) => {
     setSelectedProject(project);
     setShowModal(true);
-    document.body.style.overflow = 'hidden';
   };
 
   const handleCloseProject = () => {
     setShowModal(false);
-    document.body.style.overflow = 'auto';
-  };
-
-  // Smooth scroll handler
-  const handleNavClick = (section) => {
-    setActiveSection(section);
-    const element = document.getElementById(section === 'studio' ? 'studio' : section);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   return (
-    <div className="app">
-      <Navbar activeSection={activeSection} setActiveSection={handleNavClick} />
-      <main>
-        <Hero setActiveSection={handleNavClick} />
+    <div className="relative min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-1">
+        <Hero />
         <WhatWeBuild />
         <Projects onOpenProject={handleOpenProject} />
         <Podcast />
         <Studio />
         <Contact />
       </main>
-      <ProjectModal project={selectedProject} onClose={handleCloseProject} />
+      <ProjectModal project={selectedProject} open={showModal} onClose={handleCloseProject} />
     </div>
   );
 }
