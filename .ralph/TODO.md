@@ -2,7 +2,7 @@
 
 - [x] Add Quantide logo image to the project and update branding throughout (company name "Quantide" in navbar, title, meta tags, email)
 - [x] Pull assets from gh-pages branch (project screenshots: levr_screenshot.jpg, breadcrumb_screenshot.jpg, quantide_logo.jpg) and place in appropriate locations
-- [ ] Replace placeholder Logo component with actual Quantide logo image
+- [x] Replace placeholder Logo component with actual Quantide logo image
 - [ ] Update project cards and modal to use actual screenshot images instead of placeholders
 - [ ] Fix mobile responsiveness: add hamburger menu for mobile nav, improve touch targets, fix hidden nav-center on mobile
 - [ ] Fix tablet/medium breakpoint responsiveness: review and adjust layouts for 768px-1024px range
@@ -40,3 +40,16 @@ _Append progress and learnings here after each iteration_
   - The gh-pages branch contains the built/deployed version of the site
   - Assets can be extracted using `git show origin/gh-pages:<filename> > <destination>`
   - The logo is relatively small (320x113px) which is good for navbar use
+
+## Replace Logo Component with Actual Image - Done
+- Replaced SVG text-based placeholder Logo component with actual image
+- Updated Logo component in src/App.jsx to use `<img src="/quantide_logo.jpg" />` instead of SVG
+- Updated CSS styling in src/App.css:
+  - Changed `.nav-left .logo` to use flexbox for proper alignment
+  - Added `.logo-img` class with height: 36px for appropriate navbar sizing
+- Build passes successfully
+- Files changed: src/App.jsx (lines 4-10), src/App.css (lines 77-85)
+- **Learnings:**
+  - The logo image (320x113px) has an aspect ratio of ~2.83:1
+  - Using height: 36px gives a logo width of ~102px which fits well in the navbar
+  - Vite serves files from public/ folder at the root path (e.g., `/quantide_logo.jpg`)

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-// Logo component (placeholder - replace with actual logo)
+// Logo component
 const Logo = () => (
   <div className="logo">
-    <svg width="140" height="40" viewBox="0 0 140 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="0" y="30" fontFamily="system-ui, sans-serif" fontSize="24" fontWeight="700" fill="currentColor">QUANTIDE</text>
-    </svg>
+    <img src="/quantide_logo.jpg" alt="Quantide" className="logo-img" />
   </div>
 );
 
