@@ -58,6 +58,15 @@ button {
   background: none;
 }
 
+/* Global Focus States for Accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
+}
+
 /* Navbar */
 .navbar {
   position: fixed;
@@ -104,6 +113,12 @@ button {
   border-bottom-color: var(--black);
 }
 
+.nav-link:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
 .nav-right {
   display: flex;
   align-items: center;
@@ -125,10 +140,27 @@ button {
 
 .social-icons {
   display: flex;
-  gap: 16px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  gap: 12px;
+}
+
+.social-icons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: var(--gray-500);
+  transition: var(--transition-fast);
+  border-radius: 6px;
+}
+
+.social-icons a:hover {
+  color: var(--black);
+}
+
+.social-icons a:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
 }
 
 /* Hamburger Menu Button */
@@ -144,6 +176,12 @@ button {
   cursor: pointer;
   background: transparent;
   border: none;
+  border-radius: 6px;
+}
+
+.hamburger-btn:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
 }
 
 .hamburger-line {
@@ -212,6 +250,11 @@ button {
   color: var(--black);
 }
 
+.mobile-nav-link:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 4px;
+}
+
 .mobile-menu-footer {
   margin-top: auto;
   padding-top: 40px;
@@ -224,21 +267,28 @@ button {
 
 .mobile-social-icons {
   display: flex;
-  gap: 24px;
+  gap: 16px;
   justify-content: center;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: var(--gray-500);
 }
 
-.mobile-social-icons span {
-  padding: 12px;
-  min-width: 44px;
-  min-height: 44px;
+.mobile-social-icons a {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 48px;
+  height: 48px;
+  color: var(--gray-500);
+  transition: var(--transition-fast);
+  border-radius: 8px;
+}
+
+.mobile-social-icons a:hover {
+  color: var(--black);
+}
+
+.mobile-social-icons a:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
 }
 
 /* Hero Section */
@@ -292,6 +342,10 @@ button {
 
 .btn-primary:hover {
   background: var(--gray-800);
+}
+
+.btn-primary:focus-visible {
+  outline-color: var(--off-white);
 }
 
 .btn-text {
@@ -381,6 +435,11 @@ button {
   color: var(--off-white);
 }
 
+.build-card:focus-visible {
+  outline: 2px solid var(--off-white);
+  outline-offset: -4px;
+}
+
 .card-index {
   display: block;
   font-size: 0.75rem;
@@ -444,6 +503,11 @@ button {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
+.project-card:focus-visible {
+  outline: 3px solid var(--black);
+  outline-offset: 4px;
+}
+
 .project-preview {
   aspect-ratio: 16/10;
   background: var(--gray-200);
@@ -479,6 +543,11 @@ button {
 
 .see-project-btn:hover {
   background: var(--gray-800);
+}
+
+.see-project-btn:focus-visible {
+  outline: 2px solid var(--off-white);
+  outline-offset: -4px;
 }
 
 /* Modal */
@@ -521,6 +590,11 @@ button {
 
 .modal-close:hover {
   background: var(--gray-200);
+}
+
+.modal-close:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
 }
 
 .modal-header {

@@ -60,3 +60,16 @@ Changes made:
 2. Added new `@media (max-width: 900px)` breakpoint to show hamburger menu earlier (prevents cramped navbar) and collapse contact section to single column
 3. Build passes successfully
 
+[12:42:43 PM] Committed: chore(ralph): iteration 6 progress
+[12:42:45 PM] Iteration 7 starting
+[12:44:56 PM] Task completed. I've:
+
+1. **Fixed modal class vs className inconsistency** - Changed `class="label"` to `className="label"` on lines 220-222 (ROLE, STACK, STATUS fields)
+
+2. **Improved social icons with proper SVG icons** - Replaced text placeholders (X, GH, IN) with proper SVG icons for X (Twitter), GitHub, and LinkedIn with proper accessibility attributes (aria-label, target="_blank", rel="noopener noreferrer")
+
+3. **Added focus states for accessibility** - Added comprehensive `focus-visible` styles throughout:
+   - Global focus styles for buttons, links, inputs, textareas
+   - Specific focus styles for dark backgrounds using light outlines
+   - Focus styles for nav links, hamburger menu, modal close, project cards, see project buttons, build cards, and social icons
+

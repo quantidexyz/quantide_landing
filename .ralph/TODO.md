@@ -6,7 +6,7 @@
 - [x] Update project cards and modal to use actual screenshot images instead of placeholders
 - [x] Fix mobile responsiveness: add hamburger menu for mobile nav, improve touch targets, fix hidden nav-center on mobile
 - [x] Fix tablet/medium breakpoint responsiveness: review and adjust layouts for 768px-1024px range
-- [ ] Polish UI/UX: fix modal class vs className inconsistency (lines 181-183), improve social icons with proper icons, add focus states for accessibility
+- [x] Polish UI/UX: fix modal class vs className inconsistency (lines 181-183), improve social icons with proper icons, add focus states for accessibility
 - [ ] Test responsive design across all breakpoints and verify all sections display correctly
 
 ---
@@ -109,3 +109,31 @@ _Append progress and learnings here after each iteration_
   - Hamburger menu can appear earlier (900px) to prevent cramped navbar on narrow tablets
   - Progressive reduction of padding/gaps creates smooth visual transition across breakpoints
   - Contact section (2-column grid) needs to collapse earlier than other sections due to text size
+
+## Polish UI/UX - Done
+- Fixed modal class vs className inconsistency (lines 220-222 in App.jsx):
+  - Changed `class="label"` to `className="label"` for ROLE, STACK, STATUS spans
+- Replaced social icon text placeholders with proper SVG icons:
+  - X (Twitter) icon - 18px desktop / 24px mobile
+  - GitHub icon - 18px desktop / 24px mobile
+  - LinkedIn icon - 18px desktop / 24px mobile
+  - Added proper anchor tags with href, target="_blank", rel="noopener noreferrer", and aria-label
+- Added comprehensive focus-visible states for accessibility:
+  - Global: buttons, links, inputs, textareas get 2px solid outline
+  - .btn-primary: uses light outline (off-white) for visibility on dark background
+  - .nav-link: outline-offset 4px for better visibility
+  - .hamburger-btn: added border-radius and focus outline
+  - .mobile-nav-link: outline-offset 4px
+  - .modal-close: focus outline
+  - .project-card: 3px outline with offset
+  - .see-project-btn: inset outline for dark button
+  - .build-card: light outline for dark background
+  - .social-icons a / .mobile-social-icons a: focus outlines
+- Files changed: src/App.jsx (lines 43-62, 74-93, 220-222), src/App.css (multiple locations)
+- Build passes successfully
+- **Learnings:**
+  - JSX requires `className` instead of `class` - React will warn in dev but it's a real bug
+  - `focus-visible` is better than `focus` for keyboard accessibility (doesn't trigger on mouse clicks)
+  - Dark backgrounds need light-colored focus outlines (off-white vs black)
+  - SVG icons should be wrapped in anchor tags with proper aria-labels for screen readers
+  - Outline-offset helps focus rings not overlap content
