@@ -91,10 +91,384 @@ const Navbar = () => {
   );
 };
 
+// Hero particle animation (canvas-based, inspired by provided snippet)
+const HeroParticles = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let W = 0;
+    let H = 0;
+    let dpr = window.devicePixelRatio || 1;
+
+    const PARTICLE_COUNT = 2200;
+    const particles = [];
+
+    let currentShape = 0;
+    let holdTimer = 0;
+    const holdDuration = 260;
+    let isMorphing = false;
+    let morphT = 0;
+    const morphSpeed = 0.003;
+    let time = 0;
+
+    function resize() {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const rect = parent.getBoundingClientRect();
+      W = rect.width || window.innerWidth;
+      H = rect.height || window.innerHeight;
+      dpr = window.devicePixelRatio || 1;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = `${W}px`;
+      canvas.style.height = `${H}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Shape generators (adapted from provided HTML snippet)
+    function worldMap() {
+      const pts = [];
+      const add = (cx, cy, w, h, n, scatter) => {
+        for (let i = 0; i < n; i++) {
+          const gx = cx + (Math.random() - 0.5) * w;
+          const gy = cy + (Math.random() - 0.5) * h;
+          const gridSize = 0.022;
+          const x =
+            Math.round(gx / gridSize) * gridSize +
+            (Math.random() - 0.5) * gridSize * scatter;
+          const y =
+            Math.round(gy / gridSize) * gridSize +
+            (Math.random() - 0.5) * gridSize * scatter;
+          pts.push({ x, y, s: 1 + Math.random() * 2.2 });
+        }
+      };
+      add(-0.52, -0.08, 0.38, 0.32, 200, 0.4);
+      add(-0.35, 0.12, 0.08, 0.1, 30, 0.3);
+      add(-0.28, 0.3, 0.18, 0.35, 140, 0.4);
+      add(0.08, -0.15, 0.16, 0.16, 80, 0.35);
+      add(0.12, 0.15, 0.2, 0.38, 160, 0.4);
+      add(0.38, -0.12, 0.45, 0.32, 280, 0.4);
+      add(0.58, 0.32, 0.16, 0.12, 50, 0.4);
+      add(-0.22, -0.32, 0.1, 0.08, 25, 0.3);
+      return pts;
+    }
+
+    function waveField() {
+      const pts = [];
+      const cols = 90;
+      const rows = 24;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const x = (c / (cols - 1)) * 2 - 1;
+          const baseY = (r / (rows - 1)) * 1.0 - 0.5;
+          const wave1 = Math.sin(x * 3.5 + r * 0.25) * 0.06;
+          const wave2 = Math.sin(x * 5 - r * 0.15) * 0.03;
+          const y = baseY + wave1 + wave2;
+          if (Math.random() < 0.82) {
+            const amplitude = Math.abs(wave1 + wave2);
+            pts.push({
+              x,
+              y,
+              s: 0.8 + amplitude * 12 + Math.random() * 1.2
+            });
+          }
+        }
+      }
+      return pts;
+    }
+
+    function globe() {
+      const pts = [];
+      for (let m = 0; m < 14; m++) {
+        const lon = (m / 14) * Math.PI;
+        for (let i = 0; i < 45; i++) {
+          const lat = (i / 44) * Math.PI * 2;
+          const x = Math.cos(lon) * Math.sin(lat) * 0.48;
+          const y = Math.cos(lat) * 0.48;
+          const z = Math.sin(lon) * Math.sin(lat);
+          if (z > -0.25) {
+            const depth = (z + 0.25) / 1.25;
+            pts.push({
+              x,
+              y,
+              s: (0.6 + depth * 2) * (0.5 + Math.random() * 0.5)
+            });
+          }
+        }
+      }
+      for (let p = 1; p < 9; p++) {
+        const lat = (p / 9) * Math.PI;
+        const r = Math.sin(lat) * 0.48;
+        const yy = Math.cos(lat) * 0.48;
+        const count = Math.floor(55 * Math.sin(lat));
+        for (let i = 0; i < count; i++) {
+          const lon = (i / count) * Math.PI * 2;
+          const x = Math.cos(lon) * r;
+          const z = Math.sin(lon) * r;
+          if (z > -0.2) {
+            const depth = (z + 0.2) / 1.2;
+            pts.push({
+              x,
+              y: yy,
+              s: (0.6 + depth * 2) * (0.5 + Math.random() * 0.5)
+            });
+          }
+        }
+      }
+      return pts;
+    }
+
+    function mountains() {
+      const pts = [];
+      const peaks = [
+        { cx: -0.7, h: 0.25, w: 0.22 },
+        { cx: -0.4, h: 0.42, w: 0.28 },
+        { cx: -0.05, h: 0.55, w: 0.3 },
+        { cx: 0.3, h: 0.38, w: 0.25 },
+        { cx: 0.6, h: 0.3, w: 0.22 },
+        { cx: 0.85, h: 0.2, w: 0.2 }
+      ];
+      const gridX = 0.018;
+      const gridY = 0.018;
+      for (let x = -1; x <= 1; x += gridX) {
+        let skyline = 0.35;
+        for (const p of peaks) {
+          const d = Math.abs(x - p.cx) / p.w;
+          if (d < 1) {
+            const mtnY = 0.35 - p.h * Math.pow(1 - d * d, 1.2);
+            skyline = Math.min(skyline, mtnY);
+          }
+        }
+        for (let y = skyline; y <= 0.42; y += gridY) {
+          if (Math.random() < 0.88) {
+            const edgeDist = y - skyline;
+            const s =
+              edgeDist < 0.03
+                ? 1.5 + Math.random() * 2
+                : 0.8 + Math.random() * 1.5;
+            pts.push({
+              x: x + (Math.random() - 0.5) * gridX * 0.3,
+              y: y + (Math.random() - 0.5) * gridY * 0.3,
+              s
+            });
+          }
+        }
+      }
+      return pts;
+    }
+
+    function galaxy() {
+      const pts = [];
+      const arms = 3;
+      for (let a = 0; a < arms; a++) {
+        const armOffset = (a / arms) * Math.PI * 2;
+        for (let i = 0; i < 350; i++) {
+          const t = (i / 350) * Math.PI * 2.5;
+          const r = 0.05 + (i / 350) * 0.5;
+          const spread = 0.03 + r * 0.12;
+          const x =
+            Math.cos(t + armOffset) * r +
+            (Math.random() - 0.5) * spread;
+          const y =
+            Math.sin(t + armOffset) * r * 0.55 +
+            (Math.random() - 0.5) * spread * 0.6;
+          const distFromCenter = Math.sqrt(x * x + y * y);
+          pts.push({
+            x,
+            y,
+            s:
+              0.5 +
+              (1 - distFromCenter) * 2.5 * Math.random()
+          });
+        }
+      }
+      for (let i = 0; i < 200; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const r = Math.random() * 0.08;
+        pts.push({
+          x: Math.cos(angle) * r,
+          y: Math.sin(angle) * r * 0.55,
+          s: 1.5 + Math.random() * 2
+        });
+      }
+      return pts;
+    }
+
+    const shapeGenerators = [worldMap, waveField, globe, mountains, galaxy];
+
+    const shapeTargets = shapeGenerators.map((fn) => {
+      let pts = fn();
+      while (pts.length < PARTICLE_COUNT) {
+        const src = pts[Math.floor(Math.random() * pts.length)];
+        pts.push({
+          x: src.x + (Math.random() - 0.5) * 0.015,
+          y: src.y + (Math.random() - 0.5) * 0.015,
+          s: src.s * (0.2 + Math.random() * 0.4)
+        });
+      }
+      return pts.slice(0, PARTICLE_COUNT);
+    });
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const t = shapeTargets[0][i];
+      particles.push({
+        x: (Math.random() - 0.5) * 2.5,
+        y: (Math.random() - 0.5) * 2.5,
+        s: 0.5,
+        tx: t.x,
+        ty: t.y,
+        ts: t.s,
+        vx: 0,
+        vy: 0,
+        opacity: 0,
+        delay: Math.random() * 40
+      });
+    }
+
+    function assignTargets(shapeIndex) {
+      const targets = shapeTargets[shapeIndex];
+      const pIdx = Array.from({ length: PARTICLE_COUNT }, (_, i) => i);
+      const tIdx = Array.from({ length: PARTICLE_COUNT }, (_, i) => i);
+
+      pIdx.sort((a, b) => {
+        const da =
+          Math.atan2(particles[a].y, particles[a].x) +
+          particles[a].y * 0.5;
+        const db =
+          Math.atan2(particles[b].y, particles[b].x) +
+          particles[b].y * 0.5;
+        return da - db;
+      });
+      tIdx.sort((a, b) => {
+        const da =
+          Math.atan2(targets[a].y, targets[a].x) +
+          targets[a].y * 0.5;
+        const db =
+          Math.atan2(targets[b].y, targets[b].x) +
+          targets[b].y * 0.5;
+        return da - db;
+      });
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const pi = pIdx[i];
+        const ti = tIdx[i];
+        particles[pi].tx = targets[ti].x;
+        particles[pi].ty = targets[ti].y;
+        particles[pi].ts = targets[ti].s;
+      }
+    }
+
+    function nextShape() {
+      currentShape = (currentShape + 1) % shapeGenerators.length;
+      assignTargets(currentShape);
+      isMorphing = true;
+      morphT = 0;
+    }
+
+    let animationId;
+
+    function animate() {
+      animationId = requestAnimationFrame(animate);
+      time++;
+
+      ctx.clearRect(0, 0, W, H);
+
+      const cx = W / 2;
+      const cy = H / 2;
+      const scale = Math.min(W, H) * 0.52;
+
+      if (!isMorphing) {
+        holdTimer++;
+        if (holdTimer > holdDuration) {
+          holdTimer = 0;
+          nextShape();
+        }
+      } else {
+        morphT += morphSpeed;
+        if (morphT >= 1) {
+          morphT = 1;
+          isMorphing = false;
+          holdTimer = 0;
+        }
+      }
+
+      const spring = 0.022;
+      const damp = 0.91;
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const p = particles[i];
+
+        if (time < p.delay) continue;
+
+        const dx = p.tx - p.x;
+        const dy = p.ty - p.y;
+
+        p.vx += dx * spring;
+        p.vy += dy * spring;
+        p.vx *= damp;
+        p.vy *= damp;
+
+        const n = 0.0002;
+        p.vx += Math.sin(time * 0.006 + i * 0.13) * n;
+        p.vy += Math.cos(time * 0.008 + i * 0.09) * n;
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.s += (p.ts - p.s) * 0.02;
+
+        if (p.opacity < 1) p.opacity = Math.min(p.opacity + 0.015, 1);
+
+        const sx = cx + p.x * scale;
+        const sy = cy + p.y * scale;
+
+        if (sx < -20 || sx > W + 20 || sy < -20 || sy > H + 20) continue;
+
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const settledAlpha = Math.max(0.12, 1 - dist * 2.5);
+        const alpha = p.opacity * (0.2 + 0.8 * settledAlpha);
+
+        const breathe =
+          1 + Math.sin(time * 0.012 + i * 0.7) * 0.05;
+        const radius = Math.max(0.3, p.s * breathe);
+
+        ctx.beginPath();
+        ctx.arc(sx, sy, radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(18, 18, 18, ${alpha * 0.85})`;
+        ctx.fill();
+      }
+    }
+
+    assignTargets(currentShape);
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="w-full h-full" />;
+};
+
 // Hero Section
 const Hero = () => (
-  <section className="min-h-screen pt-[120px] pb-20 px-10 grid grid-cols-[1.2fr_0.8fr] gap-[60px] items-center bg-[linear-gradient(to_right,var(--color-background)_60%,transparent_60%),repeating-linear-gradient(90deg,transparent,transparent_40px,rgba(0,0,0,0.03)_40px,rgba(0,0,0,0.03)_41px)] max-[1024px]:grid-cols-1 max-[1024px]:bg-background max-[1024px]:pt-[100px] max-[1024px]:pb-[60px] max-[1024px]:px-6 max-[768px]:pt-20 max-[768px]:px-5" id="studio">
-    <div className="max-w-[700px] max-[1024px]:max-w-[600px]">
+  <section className="relative overflow-hidden min-h-screen pt-[120px] pb-20 px-10 grid grid-cols-[1.2fr_0.8fr] gap-[60px] items-center bg-[linear-gradient(to_right,var(--color-background)_60%,transparent_60%),repeating-linear-gradient(90deg,transparent,transparent_40px,rgba(0,0,0,0.03)_40px,rgba(0,0,0,0.03)_41px)] max-[1024px]:grid-cols-1 max-[1024px]:bg-background max-[1024px]:pt-[100px] max-[1024px]:pb-[60px] max-[1024px]:px-6 max-[768px]:pt-20 max-[768px]:px-5" id="studio">
+    {/* Full-bleed particle background */}
+    <div className="pointer-events-none absolute inset-0 opacity-80">
+      <HeroParticles />
+    </div>
+
+    <div className="relative z-10 max-w-[700px] max-[1024px]:max-w-[600px]">
       <h1 className="text-[clamp(3rem,8vw,7rem)] leading-[0.9] mb-10">
         APPS<br />
         THAT<br />
@@ -105,11 +479,11 @@ const Hero = () => (
         smart contracts, and API integrations.
       </p>
       <div className="flex gap-6 items-center max-[768px]:flex-col max-[768px]:items-start max-[768px]:gap-4">
-          <a
+        <a
           href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0nzEnWRO2K7nWz1ZqegG84WxOSIVSzjpqfZ9aPsklpl4AXS79jBxHAEjk42nFsq-_q01Mf1tEw"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-8 py-4 bg-foreground text-background text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-foreground/90 max-[768px]:w-full max-[768px]:text-center min-h-12 rounded-md"
+          className="px-8 py-4 bg-foreground text-background text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-foreground/90 max-[768px]:w-full max-[768px]:text-center min-h-12 rounded-sm"
         >
           BOOK A CALL
         </a>
@@ -121,52 +495,7 @@ const Hero = () => (
         </a>
       </div>
     </div>
-    <div className="flex items-center justify-center max-[1024px]:mt-10 max-[768px]:mt-8">
-      <div className="w-full max-w-[500px] aspect-[4/3] text-foreground/30 max-[768px]:max-w-[300px]">
-        <svg viewBox="0 0 400 300" className="w-full h-full">
-          <defs>
-            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <circle cx="1" cy="1" r="1" fill="currentColor" opacity="0.2"/>
-            </pattern>
-          </defs>
-          <rect width="400" height="300" fill="url(#grid)"/>
-          {/* Pipeline lines with animation */}
-          <path
-            d="M50 150 Q100 100 150 150 T250 150 T350 100"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-            className="opacity-40 animate-dash"
-            strokeDasharray="10 5"
-          />
-          <path
-            d="M50 180 Q100 230 150 180 T250 180 T350 220"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            fill="none"
-            className="opacity-20 animate-dash-slow"
-            strokeDasharray="8 4"
-          />
-          {/* Animated nodes */}
-          <circle cx="50" cy="150" r="8" className="fill-foreground animate-pulse-node" style={{ animationDelay: '0s' }}/>
-          <circle cx="150" cy="150" r="6" className="fill-foreground animate-pulse-node" style={{ animationDelay: '0.3s' }}/>
-          <circle cx="250" cy="150" r="8" className="fill-foreground animate-pulse-node" style={{ animationDelay: '0.6s' }}/>
-          <circle cx="350" cy="100" r="10" className="fill-foreground/80 animate-pulse-node" style={{ animationDelay: '0.9s' }}/>
-          {/* Secondary nodes */}
-          <circle cx="50" cy="180" r="5" className="fill-foreground/50 animate-pulse-node" style={{ animationDelay: '0.15s' }}/>
-          <circle cx="150" cy="180" r="4" className="fill-foreground/50 animate-pulse-node" style={{ animationDelay: '0.45s' }}/>
-          <circle cx="250" cy="180" r="5" className="fill-foreground/50 animate-pulse-node" style={{ animationDelay: '0.75s' }}/>
-          <circle cx="350" cy="220" r="8" className="fill-foreground/80 animate-pulse-node" style={{ animationDelay: '1.05s' }}/>
-          {/* Data particles flowing along paths */}
-          <circle r="3" className="fill-foreground">
-            <animateMotion dur="3s" repeatCount="indefinite" path="M50 150 Q100 100 150 150 T250 150 T350 100" />
-          </circle>
-          <circle r="2" className="fill-foreground/60">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M50 180 Q100 230 150 180 T250 180 T350 220" />
-          </circle>
-        </svg>
-      </div>
-    </div>
+    <div className="relative z-10 flex items-center justify-center max-[1024px]:mt-10 max-[768px]:mt-8" />
   </section>
 );
 
@@ -347,12 +676,17 @@ const Podcast = () => (
       A behind-the-scenes podcast about building, shipping, and scaling real products.
     </p>
     <div className="flex gap-6 justify-center mb-[60px] max-[1024px]:gap-4 max-[768px]:flex-col max-[768px]:gap-4">
-      <button className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mx-auto rounded-md">
+      <button className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mx-auto rounded-sm">
         LISTEN →
       </button>
-      <button className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mx-auto rounded-md">
+      <a
+        href="https://www.youtube.com/@0toShipped"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 max-[768px]:w-full max-[768px]:max-w-[280px] max-[768px]:mx-auto rounded-sm flex items-center justify-center"
+      >
         WATCH →
-      </button>
+      </a>
     </div>
     <div className="max-w-[200px] mx-auto text-background/40">
       <svg viewBox="0 0 200 40" className="w-full">
@@ -484,16 +818,16 @@ const Contact = ({ onPartyModeToggle }) => (
         <input
           type="email"
           placeholder="EMAIL"
-          className="w-full p-5 bg-transparent border border-background/30 text-background font-sans text-sm tracking-[0.05em] transition-colors duration-200 placeholder:text-background/40 focus:outline-none focus:border-background min-h-12 rounded-md"
+          className="w-full p-5 bg-transparent border border-background/30 text-background font-sans text-sm tracking-[0.05em] transition-colors duration-200 placeholder:text-background/40 focus:outline-none focus:border-background min-h-12 rounded-sm"
         />
         <textarea
           placeholder="WHAT DO YOU WANT TO BUILD?"
-          className="w-full p-5 bg-transparent border border-background/30 text-background font-sans text-sm tracking-[0.05em] transition-colors duration-200 placeholder:text-background/40 focus:outline-none focus:border-background resize-y min-h-[120px] rounded-md"
+          className="w-full p-5 bg-transparent border border-background/30 text-background font-sans text-sm tracking-[0.05em] transition-colors duration-200 placeholder:text-background/40 focus:outline-none focus:border-background resize-y min-h-[120px] rounded-sm"
           rows={3}
         />
         <button
           type="submit"
-          className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 min-h-12 rounded-md"
+          className="px-8 py-4 bg-background text-foreground text-sm tracking-[0.05em] font-semibold transition-colors duration-200 hover:bg-background/90 min-h-12 rounded-sm"
         >
           SEND →
         </button>
