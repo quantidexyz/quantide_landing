@@ -123,10 +123,10 @@ const HeroParticles = () => {
 
     let currentShape = 0;
     let holdTimer = 0;
-    const holdDuration = 260;
+    const holdDuration = 180;
     let isMorphing = false;
     let morphT = 0;
-    const morphSpeed = 0.003;
+    const morphSpeed = 0.006;
     let time = 0;
 
     // Mouse tracking
@@ -997,7 +997,7 @@ const InteractiveGrid = () => {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />;
+  return <canvas ref={canvasRef} className="block w-full h-full" />;
 };
 
 // Podcast Section
@@ -1014,10 +1014,12 @@ const Podcast = ({ reducedMotion }) => {
 
   return (
     <section
-      className="py-[120px] px-10 bg-foreground text-background text-center max-[1024px]:py-20 max-[1024px]:px-6 max-[768px]:px-5 relative"
+      className="min-h-screen py-[120px] px-10 bg-foreground text-background text-center max-[1024px]:py-20 max-[1024px]:px-6 max-[768px]:px-5 relative flex flex-col justify-center"
       id="podcast"
     >
-      <InteractiveGrid />
+      <div className="absolute inset-0">
+        <InteractiveGrid />
+      </div>
       <div className="pointer-events-none relative z-10">
         <img ref={logoRef} src="/0-to-shipped-logo.png" alt="0 TO SHIPPED" className="mb-6 mx-auto anim-hidden" style={{ maxWidth: 'clamp(16rem, 40vw, 32rem)', height: 'auto' }} />
         <p ref={descRef} className="text-xl text-background/50 max-w-[600px] mx-auto mb-10 anim-hidden">
