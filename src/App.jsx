@@ -123,10 +123,10 @@ const HeroParticles = () => {
 
     let currentShape = 0;
     let holdTimer = 0;
-    const holdDuration = 180;
+    const holdDuration = 260;
     let isMorphing = false;
     let morphT = 0;
-    const morphSpeed = 0.006;
+    const morphSpeed = 0.003;
     let time = 0;
 
     // Mouse tracking
