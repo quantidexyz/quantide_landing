@@ -649,6 +649,86 @@ const HeroParticles = () => {
   return <canvas ref={canvasRef} className="w-full h-full" />;
 };
 
+// Hero Terminal - live typing build log
+const HeroTerminal = ({ reducedMotion }) => {
+  const lines = [
+    { p: '$', t: 'quantide ship --product levr', accent: true },
+    { p: '→', t: 'smart contracts deployed to mainnet' },
+    { p: '→', t: 'routing 1.2M requests / mo' },
+    { p: '$', t: 'quantide ship --product openllm', accent: true },
+    { p: '→', t: 'subscription router: terms-compliant ✓' },
+    { p: '$', t: 'quantide ship --product booster', accent: true },
+    { p: '→', t: 'vector matchmaking online' },
+    { p: '✓', t: 'all systems live', done: true },
+  ];
+
+  const [shown, setShown] = useState(reducedMotion ? lines.length : 0);
+  const [typed, setTyped] = useState('');
+
+  useEffect(() => {
+    if (reducedMotion) return;
+    let line = 0;
+    let char = 0;
+    let timer;
+
+    const tick = () => {
+      if (line >= lines.length) {
+        timer = setTimeout(() => {
+          line = 0;
+          char = 0;
+          setShown(0);
+          setTyped('');
+          tick();
+        }, 3500);
+        return;
+      }
+      const full = lines[line].t;
+      if (char <= full.length) {
+        setTyped(full.slice(0, char));
+        char += 1;
+        timer = setTimeout(tick, 38);
+      } else {
+        setShown((s) => s + 1);
+        setTyped('');
+        line += 1;
+        char = 0;
+        timer = setTimeout(tick, 320);
+      }
+    };
+
+    timer = setTimeout(tick, 600);
+    return () => clearTimeout(timer);
+  }, [reducedMotion]);
+
+  return (
+    <div className="w-full max-w-[460px] rounded-lg border border-foreground/15 bg-foreground text-background shadow-[0_24px_60px_rgba(0,0,0,0.18)] overflow-hidden font-mono">
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-background/15">
+        <span className="w-3 h-3 rounded-full bg-background/25" />
+        <span className="w-3 h-3 rounded-full bg-background/25" />
+        <span className="w-3 h-3 rounded-full bg-accent" />
+        <span className="ml-3 text-[11px] tracking-[0.15em] text-background/40">quantide@studio</span>
+      </div>
+      <div className="p-5 text-[13px] leading-relaxed min-h-[260px]">
+        {lines.slice(0, shown).map((l, i) => (
+          <div key={i} className="flex gap-2">
+            <span className={cn('shrink-0', l.accent ? 'text-accent' : l.done ? 'text-accent' : 'text-background/40')}>{l.p}</span>
+            <span className={cn(l.done && 'text-accent font-semibold', l.accent && 'text-background')}>{l.t}</span>
+          </div>
+        ))}
+        {!reducedMotion && shown < lines.length && (
+          <div className="flex gap-2">
+            <span className={cn('shrink-0', lines[shown].accent ? 'text-accent' : 'text-background/40')}>{lines[shown].p}</span>
+            <span>
+              {typed}
+              <span className="animate-caret text-accent">▋</span>
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Hero Section
 const Hero = ({ reducedMotion }) => {
   const h1Ref = useRef(null);
@@ -670,7 +750,7 @@ const Hero = ({ reducedMotion }) => {
         <h1 ref={h1Ref} className="text-[clamp(3rem,8vw,7rem)] leading-[0.9] mb-10 anim-hidden">
           APPS<br />
           THAT<br />
-          WORK
+          <span className="text-accent">WORK</span>
         </h1>
         <p ref={subtitleRef} className="text-xl text-foreground/60 mb-10 max-w-[480px] max-[1024px]:text-lg anim-hidden">
           A product-focused development studio for web apps,
@@ -694,8 +774,35 @@ const Hero = ({ reducedMotion }) => {
           </a>
         </div>
       </div>
-      <div className="relative z-10 flex items-center justify-center max-[1024px]:mt-10 max-[768px]:mt-8" />
+      <div className="relative z-10 flex items-center justify-center max-[1024px]:mt-10 max-[768px]:mt-8 max-[1024px]:hidden">
+        <HeroTerminal reducedMotion={reducedMotion} />
+      </div>
     </section>
+  );
+};
+
+// Marquee Ticker
+const Marquee = () => {
+  const items = [
+    'WEB APPS', 'SMART CONTRACTS', 'AI ROUTING', 'VECTOR SEARCH',
+    'API INTEGRATIONS', 'CRM SYSTEMS', 'MVP → LAUNCH',
+  ];
+  const sequence = [...items, ...items];
+  return (
+    <div className="bg-foreground text-background border-y border-background/15 overflow-hidden py-6 select-none">
+      <div className="flex w-max animate-marquee whitespace-nowrap will-change-transform">
+        {[0, 1].map((dup) => (
+          <div key={dup} className="flex items-center" aria-hidden={dup === 1}>
+            {sequence.map((item, i) => (
+              <span key={`${dup}-${i}`} className="flex items-center text-2xl font-bold tracking-tight max-[768px]:text-xl">
+                <span className="px-8 max-[768px]:px-5">{item}</span>
+                <span className="text-accent">●</span>
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -798,20 +905,20 @@ const Projects = ({ onOpenProject, reducedMotion }) => {
         ].map((project) => (
           <div
             key={project.id}
-            className="bg-background rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 border border-foreground/10 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2"
+            className="group bg-background rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 border border-foreground/10 hover:-translate-y-2 hover:border-accent/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] focus-visible:outline-2 focus-visible:outline-foreground focus-visible:outline-offset-2"
             onClick={() => onOpenProject(project)}
             tabIndex={0}
             onKeyDown={(e) => e.key === 'Enter' && onOpenProject(project)}
           >
             <div
-              className="aspect-[16/10] bg-muted flex items-center justify-center p-4 rounded-t-2xl relative"
+              className="aspect-[16/10] bg-muted flex items-center justify-center p-4 rounded-t-2xl relative overflow-hidden"
               style={{
                 backgroundImage: `radial-gradient(circle, rgba(0, 0, 0, 0.18) 1px, transparent 1px)`,
                 backgroundSize: '20px 20px',
                 backgroundPosition: '0 0'
               }}
             >
-              <img src={project.image} alt={`${project.name} screenshot`} onError={(e) => { e.currentTarget.src = '/quantide_logo.png'; }} className="max-w-full max-h-full object-contain rounded-lg relative z-10" />
+              <img src={project.image} alt={`${project.name} screenshot`} onError={(e) => { e.currentTarget.src = '/quantide_logo.png'; }} className="max-w-full max-h-full object-contain rounded-lg relative z-10 transition-transform duration-500 ease-out group-hover:scale-[1.04]" />
             </div>
             <div className="py-6 px-8 flex gap-3 text-xs text-foreground/50 flex-wrap max-[1024px]:py-5 max-[1024px]:px-6">
               <span>{project.type}</span>
@@ -822,8 +929,8 @@ const Projects = ({ onOpenProject, reducedMotion }) => {
               <span>|</span>
               <span>{project.status}</span>
             </div>
-            <button className="w-full py-5 bg-foreground text-background text-sm tracking-[0.1em] font-semibold transition-colors duration-200 hover:bg-accent min-h-14 rounded-md">
-              SEE PROJECT →
+            <button className="w-full py-5 bg-foreground text-background text-sm tracking-[0.1em] font-semibold transition-colors duration-200 hover:bg-accent hover:text-accent-foreground min-h-14 rounded-md">
+              SEE PROJECT <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
             </button>
           </div>
         ))}
@@ -1107,8 +1214,8 @@ const Studio = ({ reducedMotion }) => {
           'Fast execution, reliable delivery',
           'Real-world systems, not theory'
         ].map((point, i) => (
-          <div key={i} className="p-8 bg-muted border border-foreground/10 max-[1024px]:p-6">
-            <span className="block text-xs text-foreground/40 mb-4 font-mono">[0{i + 1}]</span>
+          <div key={i} className="p-8 bg-muted border border-foreground/10 transition-colors duration-300 hover:border-accent/40 max-[1024px]:p-6">
+            <span className="block text-xs text-accent/80 mb-4 font-mono">[0{i + 1}]</span>
             <p className="text-lg text-foreground/80">{point}</p>
           </div>
         ))}
@@ -1291,12 +1398,15 @@ function App() {
       {/* Scroll Progress Bar */}
       <div
         ref={progressRef}
-        className="fixed top-0 left-0 right-0 h-[2px] bg-foreground origin-left z-[9999]"
+        className="fixed top-0 left-0 right-0 h-[2px] bg-accent origin-left z-[9999]"
         style={{ transform: 'scaleX(0)' }}
       />
+      {/* Grain texture overlay */}
+      <div className="grain-overlay pointer-events-none fixed inset-0 z-[45] opacity-[0.035] mix-blend-multiply" aria-hidden="true" />
       <Navbar />
       <main className="flex-1">
         <Hero reducedMotion={reducedMotion} />
+        <Marquee />
         <WhatWeBuild reducedMotion={reducedMotion} />
         <Projects onOpenProject={handleOpenProject} reducedMotion={reducedMotion} />
         <Podcast reducedMotion={reducedMotion} />
