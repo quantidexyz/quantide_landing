@@ -744,6 +744,38 @@ const Projects = ({ onOpenProject, reducedMotion }) => {
       <div ref={cardsRef} className="relative z-[1] grid grid-cols-2 gap-10 mt-[120px] max-[1024px]:grid-cols-1 max-[1024px]:gap-8 max-[1024px]:mt-20">
         {[
           {
+            id: 'openllm',
+            name: 'OpenLLM',
+            type: 'AI Infrastructure',
+            role: 'Full product & engineering',
+            stack: 'LLM routing, Subscriptions, APIs',
+            status: 'Live',
+            url: 'https://openllm.sh',
+            image: '/openllm_screenshot.jpg',
+            highlights: [
+              'Built the only subscription router fully compliant with provider terms',
+              'Multi-provider routing & unified observability',
+              'Cost tracking across providers',
+              'Full-stack product & engineering'
+            ]
+          },
+          {
+            id: 'booster',
+            name: 'Booster',
+            type: 'PropTech',
+            role: 'Full product & engineering',
+            stack: 'CRM, Vector search, APIs',
+            status: 'Live',
+            url: 'https://boosterprop.com',
+            image: '/booster_screenshot.jpg',
+            highlights: [
+              'Vector-based property matchmaking engine',
+              'CRM integration & data pipelines',
+              'End-to-end tech build for the product',
+              'Full-stack product & engineering'
+            ]
+          },
+          {
             id: 'levr',
             name: 'Levr',
             type: 'Token Launchpad',
@@ -779,7 +811,7 @@ const Projects = ({ onOpenProject, reducedMotion }) => {
                 backgroundPosition: '0 0'
               }}
             >
-              <img src={project.image} alt={`${project.name} screenshot`} className="max-w-full max-h-full object-contain rounded-lg relative z-10" />
+              <img src={project.image} alt={`${project.name} screenshot`} onError={(e) => { e.currentTarget.src = '/quantide_logo.png'; }} className="max-w-full max-h-full object-contain rounded-lg relative z-10" />
             </div>
             <div className="py-6 px-8 flex gap-3 text-xs text-foreground/50 flex-wrap max-[1024px]:py-5 max-[1024px]:px-6">
               <span>{project.type}</span>
@@ -816,7 +848,7 @@ const ProjectModal = ({ project, open, onClose }) => {
 
         <div className="space-y-6">
           <div className="aspect-video bg-muted rounded-lg overflow-hidden">
-            <img src={project.image} alt={`${project.name} interface`} className="w-full h-full object-cover" />
+            <img src={project.image} alt={`${project.name} interface`} onError={(e) => { e.currentTarget.src = '/quantide_logo.png'; }} className="w-full h-full object-cover" />
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-foreground/5 rounded-lg">
@@ -841,7 +873,7 @@ const ProjectModal = ({ project, open, onClose }) => {
           <div>
             <h4 className="text-xs tracking-wide text-foreground/50 mb-3">WHAT WE DID</h4>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {['Product definition', 'Smart contract architecture', 'Frontend & UX', 'API integrations'].map((item, i) => (
+              {(project.highlights || ['Product definition', 'Smart contract architecture', 'Frontend & UX', 'API integrations']).map((item, i) => (
                 <li key={i} className="flex items-center gap-2 text-sm text-foreground/80">
                   <span className="text-foreground/40">→</span>
                   {item}
